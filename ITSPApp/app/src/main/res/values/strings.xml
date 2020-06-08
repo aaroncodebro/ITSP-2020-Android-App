@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ITSP App</string>
+    <string name="cam_img">Camera Image</string>
+    <string name="cam_inst">USE CAMERA</string>
+</resources>
