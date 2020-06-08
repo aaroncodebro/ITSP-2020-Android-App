@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cameraButton"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/solveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Solve"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upperLimit" />
+
+    <EditText
+        android:id="@+id/lowerLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Lower Limit"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/upperLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:ems="10"
+        android:hint="Upper Limit"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lowerLimit" />
+
+    <ImageView
+        android:id="@+id/camera"
+        android:layout_width="112dp"
+        android:layout_height="108dp"
+        app:layout_constraintBottom_toTopOf="@+id/lowerLimit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <TextView
+        android:id="@+id/lowerLimitWarn"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:cursorVisible="true"
+        android:text=" "
+        android:textColor="#E53935"
+        android:textColorHighlight="#FF0000"
+        android:textColorHint="#FF0000"
+        android:textColorLink="#FF0000"
+        app:layout_constraintBottom_toTopOf="@+id/lowerLimit"
+        app:layout_constraintStart_toStartOf="@+id/lowerLimit" />
+
+    <TextView
+        android:id="@+id/upperLimitWarn"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:cursorVisible="true"
+        android:text=" "
+        android:textColor="#E53935"
+        android:textColorHighlight="#FF0000"
+        android:textColorHint="#FF0000"
+        android:textColorLink="#FF0000"
+        app:layout_constraintBottom_toTopOf="@+id/upperLimit"
+        app:layout_constraintStart_toStartOf="@+id/upperLimit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
