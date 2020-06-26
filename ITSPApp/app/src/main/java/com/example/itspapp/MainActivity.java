@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -30,6 +31,16 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageView imageView;
@@ -38,10 +49,14 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     Uri photoURI;
 
+    TextView latex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        latex = findViewById(R.id.latex);
 
         Button button = findViewById(R.id.camera_button);
         imageView = findViewById(R.id.camera_img);
@@ -85,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 imageBitmap = handleSamplingAndRotationBitmap(context, photoURI);
                 imageView.setImageBitmap(imageBitmap);
+                uploadToServer(currentPhotoPath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,11 +110,11 @@ public class MainActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "PNG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
 
@@ -195,6 +211,62 @@ public class MainActivity extends AppCompatActivity {
         Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
         img.recycle();
         return rotatedImg;
+    }
+
+    private void uploadToServer(String filePath) {
+        Retrofit retrofit = NetworkClient.getRetrofitClient(this);
+
+        UploadAPIs uploadAPIs = retrofit.create(UploadAPIs.class);
+
+        //Create a file object using file path
+        File file = new File(filePath);
+
+        // Create a request body with file and image media type
+        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+
+        // Create MultipartBody.Part using file request-body,file name and part name
+        MultipartBody.Part part = MultipartBody.Part.createFormData("upload", file.getName(), fileReqBody);
+
+        //Create request body with text description and text media type
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
+
+        //
+        Call call = uploadAPIs.uploadImage(part, description);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if(response.isSuccessful())
+                {
+
+                    ResponseBody res = (ResponseBody) response.body();
+                    try {
+                        assert res != null;
+                        String result = res.string();
+                        Log.d("response",result);
+
+                        latex.setText(result);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+                else{
+                    Log.d("response","lmaoooooo");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.d("fail",t.getLocalizedMessage());
+
+            }
+        });
+
     }
 
 }
